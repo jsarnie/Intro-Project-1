@@ -8,6 +8,14 @@ namespace Checks
 {
     class InputProcessor
     {
+        // arrays to hold conversion amounts
+        private String[] ones = {"Zero","One","Two","Three","Four",
+            "Five","Six","Seven","Eight","Nine","Ten",
+            "Eleven","Twelve","Thirteen","Fourteen","Fifteen",
+            "Sixteen","Seventeen","Eighteen","Nineteen"};
+        private String[] tens = {"","","Twenty","Thirty","Forty","Fifty",
+            "Sixty","Seventy","Eighty","Ninety"};
+            
         Tally tally = new Tally();
         private string name;
         private string memo;
@@ -36,8 +44,8 @@ namespace Checks
         public void setCheckAmount(string checkAmount)
         {
             this.checkAmount = checkAmount;
-            //Tally takes an int
-            tally.addTotalAmount(int.Parse(checkAmount));
+            //Tally takes a double - 100.55 etc.
+            tally.addTotalAmount(double.Parse(checkAmount));
         }
         public string checkAmountToString(string value)
         {
@@ -55,5 +63,13 @@ namespace Checks
         {
             tally.addCheckNumber();
         }
+        // recursive function for convert amount to string
+        public String convert(int i) {
+            if (i < 1) return i + "/100";
+            if (i < 20) return ones[i];
+            if (i < 100) return tens[i / 10] + ((i % 10 > 0) ? " " + convert(i % 10) : "");
+            if (i < 1000) return ones[i / 100] + " Hundred" + ((i % 100 > 0) ? " and " + convert(i % 100) : "");
+            if (i < 1000000) return convert(i / 1000) + " Thousand " + ((i % 1000 > 0) ? " " + convert(i % 1000) : "");
+            return convert(i / 1000000) + " Million " + ((i % 1000000 > 0) ? " " + convert(i % 1000000) : "");
     }
 }
